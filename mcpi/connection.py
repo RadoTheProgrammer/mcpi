@@ -11,7 +11,10 @@ class RequestError(Exception):
 class Connection:
     """Connection to a Minecraft Pi game"""
     RequestFailed = "Fail"
-
+    
+    verbose_mode = False
+    no_refresh = False
+    no_refresh_cmd = b""
     def __init__(self, address, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((address, port))
@@ -44,10 +47,14 @@ class Connection:
         The actual socket interaction from self.send, extracted for easier mocking
         and testing
         """
-        self.drain()
-        self.lastSent = s
+        if self.no_refresh:
+            self.no_refresh_cmd += s
+        else:
+            if self.verbose_mode:print(s)
+            self.drain()
+            self.lastSent = s
 
-        self.socket.sendall(s)
+            self.socket.sendall(s)
 
     def receive(self):
         """Receives data. Note that the trailing newline '\n' is trimmed"""
@@ -60,3 +67,11 @@ class Connection:
         """Sends and receive data"""
         self.send(*data)
         return self.receive()
+    
+    def __enter__(self):
+        self.no_refresh_cmd = b""
+        self.no_refresh = True
+        
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.no_refresh = False
+        self._send(self.no_refresh_cmd)

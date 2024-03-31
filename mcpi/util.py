@@ -9,14 +9,14 @@ def flatten(l):
             for ee in flatten(e): yield ee
         else: yield e
 
-def flatten_parameters_to_bytestring(l):
-    return b",".join(map(_misc_to_bytes, flatten(l)))
+def flatten_parameters_to_string(l):
+    return ",".join(map(str, flatten(l)))
 
-def _misc_to_bytes(m):
-    """
-    Convert an arbitrary object into a string encoded as a UTF-8 series of bytes. 
+# def _misc_to_bytes(m):
+#     """
+#     Convert an arbitrary object into a string encoded as a UTF-8 series of bytes. 
 
-    See `Connection.send` for more details.
-    """
+#     See `Connection.send` for more details.
+#     """
 
-    return str(m).encode("UTF-8")
+#     return str(m).encode("UTF-8")

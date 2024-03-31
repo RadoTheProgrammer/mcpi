@@ -1,7 +1,7 @@
 import socket
 import select
 import sys
-from .util import flatten_parameters_to_bytestring
+from .util import flatten_parameters_to_string
 
 """ @author: Aron Nieminen, Mojang AB"""
 
@@ -38,8 +38,8 @@ class Connection:
         The protocol uses CP437 encoding - https://en.wikipedia.org/wiki/Code_page_437
         which is mildly distressing as it can't encode all of Unicode.
         """
+        s = f"{f}({flatten_parameters_to_string(data)})\n"
 
-        s = b"".join([f, b"(", flatten_parameters_to_bytestring(data), b")", b"\n"])
         self._send(s)
 
     def _send(self, s):
@@ -50,6 +50,7 @@ class Connection:
         if self.no_refresh:
             self.no_refresh_cmd += s
         else:
+            s = s.encode()
             if self.verbose_mode:print(s)
             self.drain()
             self.lastSent = s

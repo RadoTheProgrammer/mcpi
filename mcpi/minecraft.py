@@ -146,7 +146,7 @@ class CmdEntity(CmdPositioner):
 class CmdPlayer(CmdPositioner):
     """Methods for the host (Raspberry Pi) player"""
     def __init__(self, connection):
-        CmdPositioner.__init__(self, connection, b"player")
+        CmdPositioner.__init__(self, connection, "player")
         self.conn = connection
 
     def getPos(self):

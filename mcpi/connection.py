@@ -14,7 +14,7 @@ class Connection:
     
     verbose_mode = False
     no_refresh = False
-    no_refresh_cmd = b""
+    no_refresh_cmd = ""
     def __init__(self, address, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((address, port))
@@ -70,7 +70,7 @@ class Connection:
         return self.receive()
     
     def __enter__(self):
-        self.no_refresh_cmd = b""
+        self.no_refresh_cmd = ""
         self.no_refresh = True
         
     def __exit__(self, exc_type, exc_value, traceback):

@@ -2,7 +2,7 @@ import socket
 import select
 import sys
 from .util import flatten_parameters_to_string
-
+from mcpi.timer import t
 """ @author: Aron Nieminen, Mojang AB"""
 
 class RequestError(Exception):
@@ -38,9 +38,12 @@ class Connection:
         The protocol uses CP437 encoding - https://en.wikipedia.org/wiki/Code_page_437
         which is mildly distressing as it can't encode all of Unicode.
         """
-        s = f"{f}({flatten_parameters_to_string(data)})\n"
-
+        p=flatten_parameters_to_string(data)
+        #t.print("flattened parameters")
+        s = f"{f}({p})\n"
+        #t.print("generated command")
         self._send(s)
+        #t.print("sent command")
 
     def _send(self, s):
         """
@@ -59,7 +62,11 @@ class Connection:
 
     def receive(self):
         """Receives data. Note that the trailing newline '\n' is trimmed"""
-        s = self.socket.makefile("r").readline().rstrip("\n")
+        s = self.socket.makefile("r")
+        t.print("makefile")
+        s=s.readline() #TODO this is the line who slow
+        t.print("readline")
+        s=s.rstrip("\n")
         if s == Connection.RequestFailed:
             raise RequestError("%s failed"%self.lastSent.strip())
         return s
@@ -67,6 +74,7 @@ class Connection:
     def sendReceive(self, *data):
         """Sends and receive data"""
         self.send(*data)
+        t.print("send")
         return self.receive()
     
     def __enter__(self):

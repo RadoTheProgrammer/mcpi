@@ -2,7 +2,7 @@ try:
     import collections.abc as collections
 except ImportError:
     import collections as collections
-
+from mcpi.timer import t
 def flatten(l):
     for e in l:
         if isinstance(e, collections.Iterable) and not isinstance(e, str):
@@ -10,7 +10,11 @@ def flatten(l):
         else: yield e
 
 def flatten_parameters_to_string(l):
-    return ",".join(map(str, flatten(l)))
+    p=flatten(l)
+    #t.print("flatten(l)")
+    d=",".join(map(str, p))
+    #t.print("joined")
+    return d
 
 # def _misc_to_bytes(m):
 #     """

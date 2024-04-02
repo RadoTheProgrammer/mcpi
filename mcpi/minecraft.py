@@ -5,7 +5,7 @@ from .entity import Entity
 from .block import Block
 import math
 from .util import flatten
-
+from mcpi.timer import t
 """ Minecraft PI low level api v0.1_1
 
     Note: many methods have the parameter *arg. This solution makes it
@@ -289,6 +289,7 @@ class Minecraft:
     def getBlockWithData(self, *args):
         """Get block with data (x,y,z) => Block"""
         ans = self.conn.sendReceive("world.getBlockWithData", intFloor(args))
+        t.print("sendreceive")
         return Block(*list(map(int, ans.split(","))))
 
     def getBlocks(self, *args):
